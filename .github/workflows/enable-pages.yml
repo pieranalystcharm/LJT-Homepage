@@ -9,32 +9,26 @@ jobs:
   enable:
     runs-on: ubuntu-latest
     steps:
-      - name: Check repo info and try Pages
-        run: |
-          echo "=== Repo info ==="
-          curl -s \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/${{ github.repository }} | head -c 2000
-          echo ""
-          echo "=== Actions workflow permissions ==="
-          curl -s \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/${{ github.repository }}/actions/permissions/workflow
-          echo ""
-          echo "=== Try enable Pages with build_type=workflow ==="
-          curl -s -X POST \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            https://api.github.com/repos/${{ github.repository }}/pages \
-            -d '{"build_type":"workflow"}'
-          echo ""
-          echo "=== Check Pages status ==="
-          curl -s \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            https://api.github.com/repos/${{ github.repository }}/pages
-          echo ""
+      - name: Enable Pages via github-script
+        uses: actions/github-script@v7
+        with:
+          script: |
+            try {
+              const result = await github.rest.repos.createPagesSite({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                build_type: 'workflow'
+              });
+              console.log('Pages enabled:', JSON.stringify(result.data));
+            } catch (error) {
+              console.log('Error:', error.message, error.status);
+            }
+            try {
+              const status = await github.rest.repos.getPages({
+                owner: context.repo.owner,
+                repo: context.repo.repo
+              });
+              console.log('Pages status:', JSON.stringify(status.data));
+            } catch (error) {
+              console.log('Status error:', error.message, error.status);
+            }
