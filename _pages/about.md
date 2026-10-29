@@ -44,7 +44,8 @@ For a complete list, please see my [publications page](/publications/) or my [Go
 
 Skills
 ======
-- **Research areas:** Natural Language Processing, Machine Learning, Large Language Models, Reinforcement Learning, Vision-Language Models, Model Interpretability
+- **Natural Language Processing**
+- **Machine Learning**
 - **LLM Reasoning and Reinforcement Learning**
 - **Hallucination in Vision-Language Models (VLM)**
 - **LLM Truthfulness and Interpretability**
