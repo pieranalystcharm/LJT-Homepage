@@ -1,5 +1,4 @@
-# Work for building an Academic Pages / Jekyll site
-name: Deploy Academic Pages template site to Pages
+name: Deploy Jekyll site to Pages
 
 on:
   push:
